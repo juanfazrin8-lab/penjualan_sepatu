@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penjualan Sepatu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#0f0f13;font-family:'Plus Jakarta Sans',sans-serif;color:#e2e8f0;min-height:100vh}
+        .glass{background:rgba(255,255,255,0.04);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.06);border-radius:16px}
+        .glass-light{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.08);border-radius:12px}
+        .accent{color:#f59e0b}
+        .btn-accent{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:700;border:none;border-radius:10px;padding:10px 20px;cursor:pointer;transition:all .2s}
+        .btn-accent:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(245,158,11,0.3)}
+        .btn-accent:active{transform:scale(0.97)}
+        .btn-green{background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;border:none;border-radius:10px;padding:10px 20px;cursor:pointer;transition:all .2s}
+        .btn-green:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(16,185,129,0.3)}
+        .btn-red{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:600;border:none;border-radius:10px;padding:10px 20px;cursor:pointer;transition:all .2s}
+        .btn-red:hover{box-shadow:0 8px 20px rgba(239,68,68,0.3)}
+        .btn-purple{background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;font-weight:700;border:none;border-radius:10px;padding:10px 20px;cursor:pointer;transition:all .2s}
+        .btn-purple:hover{box-shadow:0 8px 20px rgba(139,92,246,0.3)}
+        .btn-blue{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:700;border:none;border-radius:10px;padding:10px 20px;cursor:pointer;transition:all .2s}
+        .btn-blue:hover{box-shadow:0 8px 20px rgba(59,130,246,0.3)}
+        .btn-ghost{background:rgba(255,255,255,0.06);color:#cbd5e1;font-weight:600;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 20px;cursor:pointer;transition:all .2s}
+        .btn-ghost:hover{background:rgba(255,255,255,0.1)}
+        .input-dark{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;color:#f1f5f9;width:100%;outline:none;font-size:14px;transition:border .2s}
+        .input-dark:focus{border-color:#f59e0b}
+        .input-dark::placeholder{color:#64748b}
+        select.input-dark{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+        select.input-dark option{background:#1a1a2e;color:#f1f5f9}
+        .modal-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:1000;justify-content:center;align-items:center}
+        .modal-box{background:#1a1a2e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;max-width:600px;width:92%;max-height:90vh;overflow-y:auto;animation:modalIn .25s ease}
+        @keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .nav-tab{cursor:pointer;padding:10px 18px;border-radius:10px;font-weight:600;font-size:14px;color:#94a3b8;transition:all .2s;border:1px solid transparent}
+        .nav-tab:hover{color:#e2e8f0;background:rgba(255,255,255,0.04)}
+        .nav-tab.active{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;border-color:transparent}
+        table{width:100%;border-collapse:collapse}
+        th{padding:12px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+        td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
+        tr:hover td{background:rgba(255,255,255,0.02)}
+        .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+        .badge-green{background:rgba(16,185,129,0.15);color:#34d399}
+        .badge-yellow{background:rgba(245,158,11,0.15);color:#fbbf24}
+        .badge-red{background:rgba(239,68,68,0.15);color:#f87171}
+        .badge-blue{background:rgba(59,130,246,0.15);color:#60a5fa}
+        .badge-purple{background:rgba(139,92,246,0.15);color:#a78bfa}
+        .badge-gray{background:rgba(148,163,184,0.15);color:#94a3b8}
+        .product-card{transition:transform .2s,box-shadow .2s}
+        .product-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.3)}
+        .img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:10px;background:rgba(255,255,255,0.04)}
+        .toast{position:fixed;bottom:24px;right:24px;z-index:2000;padding:14px 24px;border-radius:12px;font-weight:600;font-size:14px;animation:toastIn .3s ease,toastOut .3s ease 2.7s forwards}
+        @keyframes toastIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes toastOut{to{opacity:0;transform:translateY(20px)}}
+        .toast-success{background:#059669;color:#fff}
+        .toast-error{background:#dc2626;color:#fff}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#333;border-radius:10px}
+        .hidden{display:none!important}
+        .stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+        .pay-method{border:2px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+        .pay-method:hover{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05)}
+        .pay-method.selected{border-color:#f59e0b;background:rgba(245,158,11,0.1)}
+        .pay-method i{font-size:28px;margin-bottom:8px;display:block}
+        .bank-card{background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;margin-bottom:8px}
+    </style>
+</head>
+<body>
+    <div class="max-w-7xl mx-auto p-4 md:p-6">
+
+        <!-- AUTH -->
+        <div id="authScreen" class="flex justify-center items-center min-h-[85vh]">
+            <div class="glass p-8 w-full max-w-md">
+                <div class="text-center mb-8">
+                    <div class="text-5xl mb-3">👟</div>
+                    <h1 class="text-2xl font-black accent">ShoeStore</h1>
+                    <p class="text-sm text-slate-400 mt-1">Sistem Penjualan Sepatu</p>
+                </div>
+                <div id="loginForm">
+                    <div class="space-y-4">
+                        <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Email</label><input type="email" id="loginEmail" class="input-dark" placeholder="admin@sepatu.com"></div>
+                        <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Password</label><input type="password" id="loginPassword" class="input-dark" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()"></div>
+                        <div id="loginError" class="text-red-400 text-sm text-center hidden"></div>
+                        <button onclick="handleLogin()" class="btn-accent w-full text-center"><i class="fas fa-sign-in-alt mr-2"></i>Masuk</button>
+                        <p class="text-center text-sm text-slate-500">Belum punya akun? <span onclick="toggleAuth()" class="accent cursor-pointer font-bold">Daftar</span></p>
+                    </div>
+                </div>
+                <div id="registerForm" class="hidden">
+                    <div class="space-y-4">
+                        <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Nama</label><input type="text" id="regName" class="input-dark" placeholder="Nama Anda"></div>
+                        <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Email</label><input type="email" id="regEmail" class="input-dark" placeholder="email@anda.com"></div>
+                        <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Password</label><input type="password" id="regPassword" class="input-dark" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleRegister()"></div>
+                        <div id="regError" class="text-red-400 text-sm text-center hidden"></div>
+                        <button onclick="handleRegister()" class="btn-green w-full text-center"><i class="fas fa-user-plus mr-2"></i>Daftar</button>
+                        <p class="text-center text-sm text-slate-500">Sudah punya akun? <span onclick="toggleAuth()" class="accent cursor-pointer font-bold">Login</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboardScreen" class="hidden">
+            <div class="glass p-5 mb-5 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">👟</span>
+                    <div><h1 class="text-xl font-black accent">ShoeStore</h1><p class="text-xs text-slate-500">Manajemen Penjualan Sepatu</p></div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right"><p class="font-bold text-sm" id="userName">User</p><span id="userRoleBadge" class="badge badge-yellow">ADMIN</span></div>
+                    <button onclick="handleLogout()" class="btn-ghost text-sm" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-5">
+                <div class="glass-light p-4"><div class="flex items-center gap-3"><div class="stat-icon bg-gradient-to-br from-amber-500 to-amber-700 text-black"><i class="fas fa-users"></i></div><div><p class="text-lg font-black" id="statCustomers">0</p><p class="text-[11px] text-slate-500">Pelanggan</p></div></div></div>
+                <div class="glass-light p-4"><div class="flex items-center gap-3"><div class="stat-icon bg-gradient-to-br from-emerald-500 to-emerald-700 text-white"><i class="fas fa-box"></i></div><div><p class="text-lg font-black" id="statProducts">0</p><p class="text-[11px] text-slate-500">Produk</p></div></div></div>
+                <div class="glass-light p-4"><div class="flex items-center gap-3"><div class="stat-icon bg-gradient-to-br from-violet-500 to-violet-700 text-white"><i class="fas fa-cubes"></i></div><div><p class="text-lg font-black" id="statStok">0</p><p class="text-[11px] text-slate-500">Total Stok</p></div></div></div>
+                <div class="glass-light p-4"><div class="flex items-center gap-3"><div class="stat-icon bg-gradient-to-br from-blue-500 to-blue-700 text-white"><i class="fas fa-shopping-bag"></i></div><div><p class="text-lg font-black" id="statOrders">0</p><p class="text-[11px] text-slate-500">Order</p></div></div></div>
+                <div class="glass-light p-4"><div class="flex items-center gap-3"><div class="stat-icon bg-gradient-to-br from-amber-500 to-amber-700 text-black"><i class="fas fa-check-circle"></i></div><div><p class="text-lg font-black" id="statLunas">0</p><p class="text-[11px] text-slate-500">Lunas</p></div></div></div>
+                <div class="glass-light p-4"><div class="flex items-center gap-3"><div class="stat-icon bg-gradient-to-br from-emerald-500 to-emerald-700 text-white"><i class="fas fa-wallet"></i></div><div><p class="text-lg font-black" id="statPendapatan">0</p><p class="text-[11px] text-slate-500">Pendapatan</p></div></div></div>
+            </div>
+
+            <div id="navTabs" class="glass p-2 mb-5 flex gap-2 flex-wrap">
+                <button class="nav-tab active" data-tab="products"><i class="fas fa-box mr-1.5"></i>Produk</button>
+                <button class="nav-tab" data-tab="stok"><i class="fas fa-cubes mr-1.5"></i>Stok</button>
+                <button class="nav-tab" data-tab="orders"><i class="fas fa-shopping-bag mr-1.5"></i>Order</button>
+                <button class="nav-tab" data-tab="payments"><i class="fas fa-credit-card mr-1.5"></i>Pembayaran</button>
+                <button class="nav-tab" data-tab="customers"><i class="fas fa-users mr-1.5"></i>Pelanggan</button>
+                <button class="nav-tab" data-tab="keranjang" id="tabKeranjang"><i class="fas fa-cart-shopping mr-1.5"></i>Keranjang <span id="keranjangCount" class="badge badge-red ml-1 hidden">0</span></button>
+            </div>
+
+            <div class="glass p-5"><div id="contentArea"><p class="text-center text-slate-500 py-10">Memuat...</p></div></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal-bg">
+        <div class="modal-box p-6">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-lg font-black" id="modalTitle">Form</h2>
+                <button onclick="closeModal()" class="text-slate-500 hover:text-white transition"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <div id="modalBody"></div>
+            <div class="flex gap-3 mt-6" id="modalActions"></div>
+        </div>
+    </div>
+
+    <script>
+    const API = 'http://localhost:3000/api';
+    let currentTab = 'products';
+    let currentUser = null;
+    let keranjang = [];
+    let allProducts = [];
+    let allStokMasuk = [];
+    let allCustomers = [];
+    let editTarget = null;
+    let bankInfo = {};
+    let selectedPayMethod = 'COD';
+
+    window.onload = () => {
+        const t = localStorage.getItem('token');
+        const u = JSON.parse(localStorage.getItem('user'));
+        if (t && u) { currentUser = u; showDashboard(); }
+    };
+
+    function openModal() { document.getElementById('modal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; editTarget = null; }
+
+    function toast(msg, type='success') {
+        const el = document.createElement('div');
+        el.className = `toast toast-${type}`;
+        el.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'} mr-2"></i>${msg}`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+    }
+
+    function toggleAuth() {
+        document.getElementById('loginForm').classList.toggle('hidden');
+        document.getElementById('registerForm').classList.toggle('hidden');
+        document.getElementById('loginError').classList.add('hidden');
+        document.getElementById('regError').classList.add('hidden');
+    }
+
+    // ========== AUTH ==========
+    async function handleLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const errEl = document.getElementById('loginError');
+        if (!email || !password) { errEl.textContent = 'Email dan password wajib diisi'; errEl.classList.remove('hidden'); return; }
+        try {
+            const r = await fetch(`${API}/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email,password}) });
+            const d = await r.json();
+            if (!r.ok) { errEl.textContent = d.error; errEl.classList.remove('hidden'); return; }
+            localStorage.setItem('token', d.token);
+            localStorage.setItem('user', JSON.stringify(d.user));
+            currentUser = d.user;
+            showDashboard();
+        } catch(e) { errEl.textContent = 'Server tidak terhubung'; errEl.classList.remove('hidden'); }
+    }
+
+    async function handleRegister() {
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const errEl = document.getElementById('regError');
+        if (!name || !email || !password) { errEl.textContent = 'Semua field wajib diisi'; errEl.classList.remove('hidden'); return; }
+        try {
+            const r = await fetch(`${API}/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,email,password}) });
+            const d = await r.json();
+            if (!r.ok) { errEl.textContent = d.error; errEl.classList.remove('hidden'); return; }
+            toast('Registrasi berhasil! Silakan login.');
+            toggleAuth();
+        } catch(e) { errEl.textContent = 'Server tidak terhubung'; errEl.classList.remove('hidden'); }
+    }
+
+    function handleLogout() { localStorage.removeItem('token'); localStorage.removeItem('user'); currentUser=null; keranjang=[]; document.getElementById('authScreen').classList.remove('hidden'); document.getElementById('dashboardScreen').classList.add('hidden'); }
+
+    function showDashboard() {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.remove('hidden');
+        document.getElementById('userName').textContent = currentUser.name;
+        const b = document.getElementById('userRoleBadge');
+        if (currentUser.role === 'admin') { b.textContent = 'ADMIN'; b.className = 'badge badge-yellow'; }
+        else { b.textContent = 'PEMBELI'; b.className = 'badge badge-green'; }
+        document.querySelectorAll('.nav-tab[data-tab="customers"],.nav-tab[data-tab="stok"],.nav-tab[data-tab="payments"]').forEach(el => el.style.display = isAdmin()?'':'none');
+        document.getElementById('tabKeranjang').style.display = isAdmin()?'none':'';
+        loadStats(); loadBankInfo(); switchTab('products');
+    }
+
+    function isAdmin() { return currentUser && currentUser.role === 'admin'; }
+
+    async function authFetch(url, opts={}) {
+        const t = localStorage.getItem('token');
+        if (t) opts.headers = { ...opts.headers, 'Authorization': `Bearer ${t}` };
+        const r = await fetch(url, opts);
+        if (r.status === 401 || r.status === 403) { handleLogout(); throw new Error('Sesi berakhir'); }
+        return r;
+    }
+
+    async function loadStats() {
+        try {
+            const d = await (await authFetch(`${API}/stats`)).json();
+            document.getElementById('statCustomers').textContent = d.totalCustomers;
+            document.getElementById('statProducts').textContent = d.totalProducts;
+            document.getElementById('statStok').textContent = d.totalStok;
+            document.getElementById('statOrders').textContent = d.totalOrders;
+            document.getElementById('statLunas').textContent = d.totalLunas;
+            document.getElementById('statPendapatan').textContent = 'Rp ' + (d.totalPendapatan||0).toLocaleString('id-ID');
+        } catch(e) {}
+    }
+
+    async function loadBankInfo() { try { bankInfo = await (await fetch(`${API}/bank-info`)).json(); } catch(e) {} }
+
+    function switchTab(tab) {
+        currentTab = tab;
+        document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.nav-tab[data-tab="${tab}"]`)?.classList.add('active');
+        const loaders = { products:loadProducts, stok:loadStok, orders:loadOrders, payments:loadPayments, customers:loadCustomers, keranjang:loadKeranjang };
+        (loaders[tab]||loadProducts)();
+    }
+    document.querySelectorAll('.nav-tab').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+    function rp(n) { return 'Rp ' + (n||0).toLocaleString('id-ID'); }
+
+    function updateKeranjangBadge() {
+        const el = document.getElementById('keranjangCount');
+        const total = keranjang.reduce((s,i) => s+i.quantity, 0);
+        if (total > 0) { el.textContent = total; el.classList.remove('hidden'); }
+        else el.classList.add('hidden');
+    }
+
+    async function deleteItem(collection, id) {
+        if(!confirm('Yakin hapus data ini?')) return;
+        try {
+            await authFetch(`${API}/${collection}/${id}`, { method:'DELETE' });
+            toast('Data dihapus'); loadStats();
+            if (collection === 'products') loadProducts();
+            else if (collection === 'orders') loadOrders();
+        } catch(e) { toast(e.message,'error'); }
+    }
+
+    // ========== PRODUCTS ==========
+    async function loadProducts() {
+        try {
+            allProducts = await (await authFetch(`${API}/products`)).json();
+            let html = '<div class="flex flex-wrap justify-between items-center mb-5 gap-3">';
+            html += '<h2 class="text-lg font-black"><i class="fas fa-box mr-2 accent"></i>Katalog Sepatu</h2>';
+            if (isAdmin()) html += '<button onclick="showProductForm()" class="btn-accent text-sm"><i class="fas fa-plus mr-2"></i>Tambah Produk</button>';
+            html += '</div>';
+            if (allProducts.length === 0) { html += '<p class="text-center text-slate-500 py-10">Belum ada produk</p>'; }
+            else {
+                html += '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">';
+                allProducts.forEach(p => {
+                    const sc = p.stok<=0?'badge-red':p.stok<=5?'badge-yellow':'badge-green';
+                    html += `<div class="glass-light product-card overflow-hidden">
+                        <div class="relative"><img src="${p.gambar||'https://picsum.photos/seed/shoe'+p.id+'/400/300'}" class="img-preview" alt="${p.name}" onerror="this.src='https://picsum.photos/seed/fb'+p.id+'/400/300'"><span class="badge ${sc} absolute top-3 right-3">Stok: ${p.stok}</span></div>
+                        <div class="p-4"><p class="text-xs text-slate-500 mb-1">${p.brand}</p><h3 class="font-bold text-sm mb-1 leading-tight" style="min-height:36px">${p.name}</h3><p class="text-xs text-slate-500 mb-2">${p.deskripsi||'-'}</p><p class="text-lg font-black accent mb-3">${rp(p.harga)}</p>
+                        ${isAdmin()?`<div class="flex gap-2"><button onclick="showProductForm(${p.id})" class="btn-ghost text-xs flex-1"><i class="fas fa-edit mr-1"></i>Edit</button><button onclick="deleteItem('products',${p.id})" class="btn-red text-xs px-3"><i class="fas fa-trash"></i></button></div>`:`<button onclick="addToCart(${p.id})" class="btn-accent w-full text-sm text-center ${p.stok<=0?'opacity-40 cursor-not-allowed':''}" ${p.stok<=0?'disabled':''}><i class="fas fa-cart-plus mr-1"></i>${p.stok<=0?'Habis':'Tambah ke Keranjang'}</button>`}</div></div>`;
+                });
+                html += '</div>';
+            }
+            document.getElementById('contentArea').innerHTML = html;
+        } catch(e) { document.getElementById('contentArea').innerHTML = `<p class="text-red-400 text-center">${e.message}</p>`; }
+    }
+
+    function showProductForm(id=null) {
+        editTarget = id;
+        const p = id ? allProducts.find(x=>x.id===id) : null;
+        document.getElementById('modalTitle').textContent = p ? 'Edit Produk' : 'Tambah Produk';
+        document.getElementById('modalBody').innerHTML = `<div class="space-y-4"><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Nama Produk</label><input id="fName" class="input-dark" value="${p?.name||''}"></div><div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Brand</label><input id="fBrand" class="input-dark" value="${p?.brand||''}"></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Stok</label><input type="number" id="fStok" class="input-dark" value="${p?.stok||0}"></div></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Harga (Rp)</label><input type="number" id="fHarga" class="input-dark" value="${p?.harga||''}"></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Deskripsi</label><textarea id="fDesc" class="input-dark" rows="2">${p?.deskripsi||''}</textarea></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Gambar Produk</label><input type="file" id="fGambar" accept="image/jpeg,image/png,image/gif,image/webp" onchange="previewImg(this)" class="input-dark text-sm" style="padding:8px"><img id="fImgPreview" src="${p?.gambar||''}" class="img-preview mt-2 ${p?.gambar?'':'hidden'}" alt="Preview"><input type="hidden" id="fGambarData" value="${p?.gambar||''}"></div></div>`;
+        document.getElementById('modalActions').innerHTML = `<button onclick="saveProduct()" class="btn-accent flex-1 text-center"><i class="fas fa-save mr-2"></i>Simpan</button><button onclick="closeModal()" class="btn-ghost flex-1 text-center">Batal</button>`;
+        openModal();
+    }
+
+    function previewImg(input) {
+        const file = input.files[0]; if (!file) return;
+        if (file.size > 5*1024*1024) { toast('Maks 5MB','error'); input.value=''; return; }
+        const reader = new FileReader();
+        reader.onload = (e) => { document.getElementById('fImgPreview').src = e.target.result; document.getElementById('fImgPreview').classList.remove('hidden'); document.getElementById('fGambarData').value = e.target.result; };
+        reader.readAsDataURL(file);
+    }
+
+    async function saveProduct() {
+        const name = document.getElementById('fName').value.trim(), brand = document.getElementById('fBrand').value.trim(), harga = document.getElementById('fHarga').value, stok = document.getElementById('fStok').value, deskripsi = document.getElementById('fDesc').value.trim(), gambar = document.getElementById('fGambarData').value;
+        if (!name||!brand||!harga) { toast('Nama, Brand, Harga wajib','error'); return; }
+        try {
+            if (editTarget) await authFetch(`${API}/products/${editTarget}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,brand,harga,stok,deskripsi,gambar})});
+            else await authFetch(`${API}/products`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,brand,harga,stok,deskripsi,gambar})});
+            toast(editTarget?'Produk diupdate':'Produk ditambahkan'); closeModal(); loadProducts(); loadStats();
+        } catch(e) { toast(e.message,'error'); }
+    }
+
+    // ================================================================
+    //  STOK
+    //  - Tambah Stok  → POST /stok-masuk → produk.stok +N
+    //  - Kurang Stok  → POST /stok-kurang → produk.stok -N
+    //  - Edit Riwayat → PUT /stok-masuk/:id → hitung selisih, produk disesuaikan
+    //  - Hapus Riwayat→ DELETE /stok-masuk/:id → produk TIDAK berubah
+    // ================================================================
+    async function loadStok() {
+        try {
+            allStokMasuk = await (await authFetch(`${API}/stok-masuk`)).json();
+            allProducts = await (await authFetch(`${API}/products`)).json();
+
+            let html = '<div class="flex flex-wrap justify-between items-center mb-5 gap-3">';
+            html += '<h2 class="text-lg font-black"><i class="fas fa-cubes mr-2 accent"></i>Manajemen Stok</h2>';
+            html += '<div class="flex gap-2">';
+            html += '<button onclick="showTambahStokForm()" class="btn-green text-sm"><i class="fas fa-plus mr-2"></i>Tambah Stok</button>';
+            html += '<button onclick="showKurangStokForm()" class="btn-red text-sm"><i class="fas fa-minus mr-2"></i>Kurang Stok</button>';
+            html += '</div></div>';
+
+            // Stok saat ini
+            html += '<div class="glass-light p-4 mb-4"><p class="text-xs font-bold text-slate-400 mb-3 uppercase">Stok Saat Ini</p><div class="grid grid-cols-2 md:grid-cols-4 gap-3">';
+            allProducts.forEach(p => {
+                const sc=p.stok<=0?'badge-red':p.stok<=5?'badge-yellow':'badge-green';
+                html+=`<div class="flex items-center gap-3"><img src="${p.gambar||'https://picsum.photos/seed/s'+p.id+'/60/60'}" class="w-10 h-10 rounded-lg object-cover" onerror="this.src='https://picsum.photos/seed/sf'+p.id+'/60/60'"><div class="flex-1 min-w-0"><p class="text-xs font-bold truncate">${p.name}</p></div><span class="badge ${sc}">${p.stok}</span></div>`;
+            });
+            html += '</div></div>';
+
+            // Tabel riwayat
+            html += '<div class="overflow-x-auto"><table><thead><tr><th>ID</th><th>Tanggal</th><th>Produk</th><th>Jumlah</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody>';
+            if (allStokMasuk.length===0) {
+                html+='<tr><td colspan="6" class="text-center text-slate-500">Belum ada riwayat</td></tr>';
+            } else {
+                allStokMasuk.forEach(s=>{
+                    const isKurang = (s.keterangan || '').includes('[KURANG]');
+                    const jmlColor = isKurang ? 'text-red-400' : 'text-green-400';
+                    const jmlPrefix = isKurang ? '-' : '+';
+                    const tipeBadge = isKurang ? 'badge-red' : 'badge-green';
+                    const tipeText = isKurang ? 'Kurang' : 'Masuk';
+
+                    html+=`<tr>
+                        <td>${s.id}</td>
+                        <td>${s.tanggal}</td>
+                        <td>${s.product_name}</td>
+                        <td><span class="badge ${tipeBadge} mr-1">${tipeText}</span> <span class="font-bold ${jmlColor}">${jmlPrefix}${s.jumlah}</span></td>
+                        <td>${(s.keterangan||'').replace(' [KURANG]','') || '-'}</td>
+                        <td>
+                            <div class="flex gap-2">
+                              
+                                <button onclick="deleteStokMasuk(${s.id})" class="btn-red text-xs px-3"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+                });
+            }
+            html+='</tbody></table></div>';
+            document.getElementById('contentArea').innerHTML=html;
+        } catch(e){
+            document.getElementById('contentArea').innerHTML=`<p class="text-red-400 text-center">${e.message}</p>`;
+        }
+    }
+
+    // ---------- TAMBAH STOK ----------
+    function showTambahStokForm() {
+        editTarget = null;
+        let opts = allProducts.map(p=>`<option value="${p.id}">${p.name} (Stok: ${p.stok})</option>`).join('');
+        document.getElementById('modalTitle').textContent = 'Tambah Stok';
+        document.getElementById('modalBody').innerHTML = `
+            <div class="space-y-4">
+                <div class="glass-light p-3 border-l-4 border-green-500 text-xs text-slate-400"><i class="fas fa-info-circle text-green-400 mr-1"></i>Stok produk akan bertambah sesuai jumlah yang diisi.</div>
+                <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Produk</label><select id="fStokProd" class="input-dark"><option value="">-- Pilih Produk --</option>${opts}</select></div>
+                <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Jumlah</label><input type="number" id="fStokJml" class="input-dark" min="1" value="1"></div>
+                <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Keterangan</label><input id="fStokKet" class="input-dark" placeholder="Contoh: Beli dari supplier"></div>
+            </div>`;
+        document.getElementById('modalActions').innerHTML = `<button onclick="saveTambahStok()" class="btn-green flex-1 text-center"><i class="fas fa-plus-circle mr-2"></i>Tambah Stok</button><button onclick="closeModal()" class="btn-ghost flex-1 text-center">Batal</button>`;
+        openModal();
+    }
+
+    async function saveTambahStok() {
+        const product_id = document.getElementById('fStokProd').value;
+        const jumlah = document.getElementById('fStokJml').value;
+        const keterangan = document.getElementById('fStokKet').value.trim();
+        if(!product_id || !jumlah || jumlah <= 0) { toast('Pilih produk dan isi jumlah','error'); return; }
+        try {
+            const r = await authFetch(`${API}/stok-masuk`, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ product_id: parseInt(product_id), jumlah: parseInt(jumlah), keterangan })
+            });
+            if (!r.ok) { const d = await r.json(); toast(d.error,'error'); return; }
+            toast('Stok berhasil ditambahkan'); closeModal(); loadStok(); loadProducts(); loadStats();
+        } catch(e) { toast(e.message,'error'); }
+    }
+
+    // ---------- KURANG STOK ----------
+    function showKurangStokForm() {
+        editTarget = null;
+        let opts = allProducts.map(p=>`<option value="${p.id}">${p.name} (Stok: ${p.stok})</option>`).join('');
+        document.getElementById('modalTitle').textContent = 'Kurang Stok';
+        document.getElementById('modalBody').innerHTML = `
+            <div class="space-y-4">
+                <div class="glass-light p-3 border-l-4 border-red-500 text-xs text-slate-400"><i class="fas fa-info-circle text-red-400 mr-1"></i>Stok produk akan berkurang sesuai jumlah yang diisi. Tidak bisa kurang dari 0.</div>
+                <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Produk</label><select id="fStokProd" class="input-dark"><option value="">-- Pilih Produk --</option>${opts}</select></div>
+                <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Jumlah</label><input type="number" id="fStokJml" class="input-dark" min="1" value="1"></div>
+                <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Keterangan</label><input id="fStokKet" class="input-dark" placeholder="Contoh: Barang rusak"></div>
+            </div>`;
+        document.getElementById('modalActions').innerHTML = `<button onclick="saveKurangStok()" class="btn-red flex-1 text-center"><i class="fas fa-minus-circle mr-2"></i>Kurang Stok</button><button onclick="closeModal()" class="btn-ghost flex-1 text-center">Batal</button>`;
+        openModal();
+    }
+
+    async function saveKurangStok() {
+        const product_id = document.getElementById('fStokProd').value;
+        const jumlah = document.getElementById('fStokJml').value;
+        const keterangan = document.getElementById('fStokKet').value.trim();
+        if(!product_id || !jumlah || jumlah <= 0) { toast('Pilih produk dan isi jumlah','error'); return; }
+        try {
+            const r = await authFetch(`${API}/stok-kurang`, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ product_id: parseInt(product_id), jumlah: parseInt(jumlah), keterangan })
+            });
+            if (!r.ok) { const d = await r.json(); toast(d.error,'error'); return; }
+            toast('Stok berhasil dikurangi'); closeModal(); loadStok(); loadProducts(); loadStats();
+        } catch(e) { toast(e.message,'error'); }
+    }
+
+    // ---------- EDIT RIWAYAT STOK ----------
+    // function showEditStokForm(id) {
+    //     editTarget = id;
+    //     const s = allStokMasuk.find(x => x.id === id);
+    //     if (!s) return;
+
+    //     let opts = allProducts.map(p=>`<option value="${p.id}" ${s.product_id === p.id ? 'selected' : ''}>${p.name} (Stok: ${p.stok})</option>`).join('');
+
+    //     document.getElementById('modalTitle').textContent = 'Edit Riwayat Stok';
+    //     document.getElementById('modalBody').innerHTML = `
+    //         <div class="space-y-4">
+    //             <div class="glass-light p-3 border-l-4 border-blue-500 text-xs text-slate-400">
+    //                 <i class="fas fa-info-circle text-blue-400 mr-1"></i>
+    //                 Stok produk akan disesuaikan secara otomatis berdasarkan selisih (jumlah baru - jumlah lama).
+    //                 Jika mengurangi, stok tidak boleh minus.
+    //             </div>
+    //             <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Produk</label><select id="fStokProd" class="input-dark"><option value="">-- Pilih Produk --</option>${opts}</select></div>
+    //             <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Jumlah</label><input type="number" id="fStokJml" class="input-dark" min="1" value="${s.jumlah}"></div>
+    //             <div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Keterangan</label><input id="fStokKet" class="input-dark" value="${(s.keterangan||'').replace(' [KURANG]','')}"></div>
+    //         </div>`;
+    //     document.getElementById('modalActions').innerHTML = `<button onclick="saveEditStok()" class="btn-blue flex-1 text-center"><i class="fas fa-save mr-2"></i>Update & Terapkan</button><button onclick="closeModal()" class="btn-ghost flex-1 text-center">Batal</button>`;
+    //     openModal();
+    // }
+
+    // async function saveEditStok() {
+    //     const product_id = document.getElementById('fStokProd').value;
+    //     const jumlah = document.getElementById('fStokJml').value;
+    //     let keterangan = document.getElementById('fStokKet').value.trim();
+    //     if(!product_id || !jumlah || jumlah <= 0) { toast('Pilih produk dan isi jumlah','error'); return; }
+
+    //     // Jika riwayat asli adalah kurang, pertahankan tag [KURANG]
+    //     const s = allStokMasuk.find(x => x.id === editTarget);
+    //     if (s && (s.keterangan || '').includes('[KURANG]')) {
+    //         keterangan = keterangan + ' [KURANG]';
+    //     }
+
+    //     try {
+    //         const r = await authFetch(`${API}/stok-masuk/${editTarget}`, {
+    //             method: 'PUT',
+    //             headers: {'Content-Type':'application/json'},
+    //             body: JSON.stringify({ product_id: parseInt(product_id), jumlah: parseInt(jumlah), keterangan })
+    //         });
+    //         if (!r.ok) { const d = await r.json(); toast(d.error,'error'); return; }
+    //         toast('Riwayat diupdate, stok produk disesuaikan'); closeModal(); loadStok(); loadProducts(); loadStats();
+    //     } catch(e) { toast(e.message,'error'); }
+    // }
+
+    // ---------- HAPUS RIWAYAT (produk tidak berubah) ----------
+    async function deleteStokMasuk(id) {
+        if(!confirm('Hapus riwayat stok ini?\n\nJumlah stok produk TIDAK akan berubah.\nHanya baris riwayat ini yang dihapus.')) return;
+        try {
+            await authFetch(`${API}/stok-masuk/${id}`, { method: 'DELETE' });
+            toast('Riwayat stok dihapus');
+            loadStok(); // TIDAK perlu loadProducts/loadStats karena produk tidak berubah
+        } catch(e) { toast(e.message,'error'); }
+    }
+
+    // ========== PELANGGAN ==========
+    async function loadCustomers() {
+        try {
+            allCustomers = await (await authFetch(`${API}/customers`)).json();
+            let html = '<div class="flex flex-wrap justify-between items-center mb-5 gap-3"><h2 class="text-lg font-black"><i class="fas fa-users mr-2 accent"></i>Data Pelanggan</h2></div>';
+            if (allCustomers.length === 0) {
+                html += '<div class="text-center py-16"><i class="fas fa-users text-5xl text-slate-700 mb-4"></i><p class="text-slate-500">Belum ada pelanggan</p></div>';
+            } else {
+                html += '<div class="overflow-x-auto"><table><thead><tr><th>ID</th><th>Nama</th><th>Email</th><th>Alamat</th><th>Aksi</th></tr></thead><tbody>';
+                allCustomers.forEach(c => {
+                    html += `<tr><td>${c.id}</td><td class="font-bold">${c.name}</td><td class="text-slate-400">${c.email}</td><td class="text-slate-500 text-sm">${c.alamat || '-'}</td><td><div class="flex gap-2"><button onclick="showCustomerForm(${c.id})" class="btn-blue text-xs px-3"><i class="fas fa-edit mr-1"></i>Edit</button><button onclick="deleteCustomer(${c.id},'${c.name.replace(/'/g, "\\'")}')" class="btn-red text-xs px-3"><i class="fas fa-trash mr-1"></i>Hapus</button></div></td></tr>`;
+                });
+                html += '</tbody></table></div>';
+            }
+            document.getElementById('contentArea').innerHTML = html;
+        } catch(e) { document.getElementById('contentArea').innerHTML = `<p class="text-red-400 text-center">${e.message}</p>`; }
+    }
+
+    function showCustomerForm(id = null) {
+        editTarget = id;
+        const c = id ? allCustomers.find(x => x.id === id) : null;
+        document.getElementById('modalTitle').textContent = c ? 'Edit Pelanggan' : 'Tambah Pelanggan';
+        document.getElementById('modalBody').innerHTML = `<div class="space-y-4"><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Nama</label><input id="fCustName" class="input-dark" value="${c?.name || ''}"></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Email</label><input id="fCustEmail" type="email" class="input-dark" value="${c?.email || ''}"></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Alamat</label><textarea id="fCustAlamat" class="input-dark" rows="2">${c?.alamat || ''}</textarea></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Password ${c ? '(kosongkan jika tidak diubah)' : ''}</label><input id="fCustPassword" type="password" class="input-dark" placeholder="${c ? '••••••••' : 'Password'}"></div></div>`;
+        const btnText = c ? '<i class="fas fa-save mr-2"></i>Update' : '<i class="fas fa-user-plus mr-2"></i>Tambah';
+        const btnClass = c ? 'btn-blue flex-1 text-center' : 'btn-green flex-1 text-center';
+        document.getElementById('modalActions').innerHTML = `<button onclick="saveCustomer()" class="${btnClass}">${btnText}</button><button onclick="closeModal()" class="btn-ghost flex-1 text-center">Batal</button>`;
+        openModal();
+    }
+
+    async function saveCustomer() {
+        const name = document.getElementById('fCustName').value.trim(), email = document.getElementById('fCustEmail').value.trim(), alamat = document.getElementById('fCustAlamat').value.trim(), password = document.getElementById('fCustPassword').value;
+        if (!name || !email) { toast('Nama dan Email wajib','error'); return; }
+        try {
+            if (editTarget) {
+                const body = { name, email, alamat }; if (password) body.password = password;
+                await authFetch(`${API}/customers/${editTarget}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+                toast('Pelanggan diupdate');
+            } else {
+                if (!password) { toast('Password wajib diisi','error'); return; }
+                await authFetch(`${API}/customers`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, email, alamat, password }) });
+                toast('Pelanggan ditambahkan');
+            }
+            closeModal(); loadCustomers(); loadStats();
+        } catch(e) { toast(e.message,'error'); }
+    }
+
+    async function deleteCustomer(id, name) {
+        if (!confirm(`Hapus pelanggan "${name}"?`)) return;
+        try { await authFetch(`${API}/customers/${id}`, { method:'DELETE' }); toast(`Pelanggan "${name}" dihapus`); loadCustomers(); loadStats(); } catch(e) { toast(e.message,'error'); }
+    }
+
+    // ========== KERANJANG ==========
+    function addToCart(pid) {
+        const p=allProducts.find(x=>x.id===pid); if(!p||p.stok<=0) return;
+        const ex=keranjang.find(x=>x.product_id===pid);
+        if(ex){if(ex.quantity>=p.stok){toast('Stok tidak cukup','error');return;}ex.quantity++;}
+        else keranjang.push({product_id:pid,name:p.name,price:p.harga,gambar:p.gambar,quantity:1,maxStok:p.stok});
+        updateKeranjangBadge();toast(`${p.name} ditambahkan`);
+    }
+    function loadKeranjang() {
+        let html='<h2 class="text-lg font-black mb-5"><i class="fas fa-cart-shopping mr-2 accent"></i>Keranjang Belanja</h2>';
+        if(keranjang.length===0){html+='<div class="text-center py-16"><i class="fas fa-cart-shopping text-5xl text-slate-700 mb-4"></i><p class="text-slate-500">Keranjang kosong</p><button onclick="switchTab(\'products\')" class="btn-accent mt-4 text-sm"><i class="fas fa-box mr-2"></i>Belanja Sekarang</button></div>';}
+        else{let total=0;html+='<div class="space-y-3 mb-5">';keranjang.forEach((item,i)=>{const sub=item.price*item.quantity;total+=sub;html+=`<div class="glass-light p-4 flex items-center gap-4"><img src="${item.gambar||'https://picsum.photos/seed/c'+item.product_id+'/80/80'}" class="w-16 h-16 rounded-lg object-cover" onerror="this.src='https://picsum.photos/seed/cf'+item.product_id+'/80/80'"><div class="flex-1 min-w-0"><p class="font-bold text-sm truncate">${item.name}</p><p class="text-xs text-slate-500">${rp(item.price)} / pcs</p></div><div class="flex items-center gap-2"><button onclick="changeQty(${i},-1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-sm"><i class="fas fa-minus"></i></button><span class="w-8 text-center font-bold">${item.quantity}</span><button onclick="changeQty(${i},1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-sm"><i class="fas fa-plus"></i></button></div><div class="text-right min-w-[100px]"><p class="font-black accent">${rp(sub)}</p></div><button onclick="removeFromCart(${i})" class="text-red-400 hover:text-red-300"><i class="fas fa-trash"></i></button></div>`;});html+='</div>';html+=`<div class="glass-light p-5 flex flex-wrap justify-between items-center gap-4"><div><p class="text-sm text-slate-500">Total Pembayaran</p><p class="text-2xl font-black accent">${rp(total)}</p></div><div class="flex gap-3"><button onclick="keranjang=[];updateKeranjangBadge();loadKeranjang()" class="btn-ghost text-sm"><i class="fas fa-trash mr-1"></i>Kosongkan</button><button onclick="checkout()" class="btn-accent text-sm"><i class="fas fa-check mr-2"></i>Checkout</button></div></div>`;}
+        document.getElementById('contentArea').innerHTML=html;
+    }
+    function changeQty(i,d){keranjang[i].quantity+=d;if(keranjang[i].quantity<=0)keranjang.splice(i,1);else if(keranjang[i].quantity>keranjang[i].maxStok){keranjang[i].quantity=keranjang[i].maxStok;toast('Stok tidak cukup','error');}updateKeranjangBadge();loadKeranjang();}
+    function removeFromCart(i){keranjang.splice(i,1);updateKeranjangBadge();loadKeranjang();}
+
+    // ========== CHECKOUT ==========
+    async function checkout() {
+        if(keranjang.length===0) return;
+        const total = keranjang.reduce((s,i)=>s+i.price*i.quantity,0);
+        document.getElementById('modalTitle').textContent='Checkout';
+        document.getElementById('modalBody').innerHTML=`<div class="space-y-5"><p class="text-sm text-slate-400 font-bold uppercase">Data Pembeli</p><div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Nama</label><input id="coName" class="input-dark" value="${currentUser.name}"></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Email</label><input id="coEmail" class="input-dark" value="${currentUser.email}"></div></div><div><label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Alamat Pengiriman</label><textarea id="coAlamat" class="input-dark" rows="2" placeholder="Alamat lengkap..."></textarea></div><div><p class="text-sm text-slate-400 font-bold uppercase mb-3">Pilih Metode Pembayaran</p><div class="grid grid-cols-2 gap-3" id="payMethodGrid"><div class="pay-method selected" onclick="selectPay('Transfer')" data-method="Transfer"><i class="fas fa-building-columns text-blue-400"></i><p class="font-bold text-sm">Transfer</p><p class="text-[10px] text-slate-500">Via bank</p></div><div class="pay-method" onclick="selectPay('QRIS')" data-method="QRIS"><i class="fas fa-qrcode text-purple-400"></i><p class="font-bold text-sm">QRIS</p><p class="text-[10px] text-slate-500">Scan & bayar</p></div></div></div><div id="payInfoBox"></div><div class="glass-light p-4"><p class="text-xs text-slate-400 mb-2 font-bold uppercase">Ringkasan Pesanan</p>${keranjang.map(i=>`<div class="flex justify-between text-sm mb-1"><span>${i.name} x${i.quantity}</span><span class="font-bold">${rp(i.price*i.quantity)}</span></div>`).join('')}<div class="border-t border-white/10 mt-2 pt-2 flex justify-between font-black text-lg"><span class="accent">Total</span><span class="accent">${rp(total)}</span></div></div></div>`;
+        document.getElementById('modalActions').innerHTML=`<button onclick="doCheckout()" class="btn-green flex-1 text-center"><i class="fas fa-paper-plane mr-2"></i>Buat Pesanan</button><button onclick="closeModal()" class="btn-ghost flex-1 text-center">Batal</button>`;
+        selectedPayMethod='Transfer'; updatePayInfo(); openModal();
+    }
+    function selectPay(method) { selectedPayMethod=method; document.querySelectorAll('.pay-method').forEach(el=>el.classList.remove('selected')); document.querySelector(`.pay-method[data-method="${method}"]`)?.classList.add('selected'); updatePayInfo(); }
+    function updatePayInfo() {
+        const box = document.getElementById('payInfoBox'); if (!box) return;
+        if (selectedPayMethod === 'Transfer') {
+            let banks = ''; for (const [nama, info] of Object.entries(bankInfo)) { banks += `<div class="bank-card"><div class="flex justify-between items-center mb-2"><span class="font-bold text-sm">${nama}</span><span class="badge badge-blue">${nama}</span></div><p class="text-lg font-black tracking-wider">${info.nomor}</p><p class="text-xs text-slate-400 mt-1">a.n. ${info.atas_nama}</p></div>`; }
+            box.innerHTML = `<div class="glass-light p-4 border-l-4 border-blue-500"><p class="font-bold text-blue-400 mb-3"><i class="fas fa-building-columns mr-1"></i>Transfer Bank</p><p class="text-sm text-slate-400 mb-3">Silakan transfer ke salah satu rekening berikut:</p>${banks}</div>`;
+        } else if (selectedPayMethod === 'QRIS') {
+            box.innerHTML = `<div class="glass-light p-4 border-l-4 border-purple-500"><p class="font-bold text-purple-400 mb-3"><i class="fas fa-qrcode mr-1"></i>Pembayaran QRIS</p><div class="flex flex-col items-center"><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=QRIS-ShoeStore-${Date.now()}" class="rounded-xl mb-3" alt="QRIS"><p class="text-sm text-slate-400">Scan kode QRIS menggunakan e-wallet</p></div></div>`;
+        }
+    }
+    async function doCheckout() {
+        const name=document.getElementById('coName').value.trim(),email=document.getElementById('coEmail').value.trim(),alamat=document.getElementById('coAlamat').value.trim();
+        if(!name||!email){toast('Nama dan Email wajib','error');return;}
+        const items=keranjang.map(i=>({product_id:i.product_id,quantity:i.quantity}));
+        try{const r=await authFetch(`${API}/orders/user`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items,customer_name:name,customer_email:email,customer_alamat:alamat,metode_pembayaran:selectedPayMethod})});const d=await r.json();if(!r.ok){toast(d.error,'error');return;}document.getElementById('modalTitle').textContent='Pesanan Berhasil!';document.getElementById('modalBody').innerHTML=`<div class="text-center py-4"><div class="text-6xl mb-4">📋</div><h3 class="text-xl font-black mb-2">Order #${d.order_id}</h3><p class="text-slate-400 mb-4">Metode: <span class="font-bold text-white">${d.metode}</span></p><div class="glass-light p-4 border-l-4 border-amber-500 text-left mb-4"><p class="font-bold text-amber-400"><i class="fas fa-clock mr-1"></i>Menunggu Pembayaran</p><p class="text-sm text-slate-400">Silakan lakukan pembayaran via ${d.metode}.</p></div><p class="text-sm text-slate-500">Total: <span class="font-black accent text-lg">${rp(keranjang.reduce((s,i)=>s+i.price*i.quantity,0))}</span></p></div>`;document.getElementById('modalActions').innerHTML=`<button onclick="closeModal();keranjang=[];updateKeranjangBadge();switchTab('orders')" class="btn-green flex-1 text-center"><i class="fas fa-eye mr-2"></i>Lihat Pesanan Saya</button>`;keranjang=[];updateKeranjangBadge();loadStats();}catch(e){toast(e.message,'error');}
+    }
+
+    // ========== ORDERS ==========
+    async function loadOrders() {
+        try {
+            const orders = await (await authFetch(`${API}/orders`)).json();
+            let html = '<div class="flex flex-wrap justify-between items-center mb-5 gap-3"><h2 class="text-lg font-black"><i class="fas fa-shopping-bag mr-2 accent"></i>Daftar Order</h2></div>';
+            if (orders.length===0) { html+='<div class="text-center py-16"><i class="fas fa-shopping-bag text-5xl text-slate-700 mb-4"></i><p class="text-slate-500">Belum ada order</p></div>'; }
+            else { orders.forEach(o => {
+                const payIcon = o.metode_pembayaran==='COD'?'fa-truck text-amber-400':o.metode_pembayaran==='QRIS'?'fa-qrcode text-purple-400':'fa-building-columns text-blue-400';
+                const payBadge = o.payment?.pembayaran==='Lunas'?'badge-green':'badge-yellow';
+                const payText = o.payment?.pembayaran==='Lunas'?'Lunas':'Menunggu Pembayaran';
+                html += `<div class="glass-light p-5 mb-4"><div class="flex flex-wrap justify-between items-start gap-3 mb-3"><div><div class="flex items-center gap-2 flex-wrap"><span class="font-black text-lg">#${o.id}</span><span class="badge badge-blue">${o.order_date}</span><span class="badge badge-gray"><i class="fas ${payIcon} mr-1"></i>${o.metode_pembayaran||'-'}</span><span class="badge ${payBadge}">${payText}</span></div><p class="text-sm text-slate-400 mt-1"><i class="fas fa-user mr-1"></i>${o.customer_name}</p></div><div class="text-right"><p class="text-xl font-black accent">${rp(o.total)}</p>${isAdmin()?`<button onclick="deleteItem('orders',${o.id})" class="text-red-400 text-xs mt-1 hover:underline"><i class="fas fa-trash mr-1"></i>Hapus</button>`:''}</div></div><div class="overflow-x-auto"><table class="text-sm"><thead><tr><th>Produk</th><th>Harga</th><th>Qty</th><th>Subtotal</th></tr></thead><tbody>`;
+                if(o.items?.length) o.items.forEach(i=>{html+=`<tr><td><div class="flex items-center gap-2">${i.gambar?`<img src="${i.gambar}" class="w-8 h-8 rounded object-cover" onerror="this.style.display='none'">`:''}<span>${i.product_name}</span></div></td><td>${rp(i.price)}</td><td>${i.quantity}</td><td class="font-bold">${rp(i.subtotal)}</td></tr>`;});
+                html+='</tbody></table></div>';if(o.payment && !isAdmin() && o.payment.pembayaran==='Pending'){html+=`<div class="mt-3 glass-light p-3 border-l-4 border-amber-500 text-sm"><i class="fas fa-clock text-amber-400 mr-1"></i><span class="text-slate-400">Menunggu pembayaran dikonfirmasi admin</span></div>`;} html+='</div>';
+            }); }
+            document.getElementById('contentArea').innerHTML=html;
+        }catch(e){document.getElementById('contentArea').innerHTML=`<p class="text-red-400 text-center">${e.message}</p>`;}
+    }
+
+    // ========== PEMBAYARAN ==========
+    async function loadPayments() {
+        try {
+            const data = await (await authFetch(`${API}/payments`)).json();
+            let html = '<div class="flex flex-wrap justify-between items-center mb-5 gap-3"><h2 class="text-lg font-black"><i class="fas fa-credit-card mr-2 accent"></i>Konfirmasi Pembayaran</h2></div>';
+            if(!isAdmin()) { html += '<div class="text-center py-16"><i class="fas fa-lock text-5xl text-slate-700 mb-4"></i><p class="text-slate-500">Halaman ini hanya untuk Admin</p></div>'; }
+            else {
+                const pending = data.filter(p=>p.pembayaran==='Pending'), lunas = data.filter(p=>p.pembayaran==='Lunas');
+                html += `<div class="mb-6"><h3 class="text-sm font-bold text-amber-400 uppercase mb-3"><i class="fas fa-clock mr-1"></i>Menunggu Konfirmasi (${pending.length})</h3>`;
+                if(pending.length===0) html += '<div class="glass-light p-4 text-center text-slate-500 text-sm">Tidak ada pembayaran pending</div>';
+                else { html += '<div class="space-y-3">'; pending.forEach(p => { html += `<div class="glass-light p-4 flex flex-wrap justify-between items-center gap-3"><div><p class="font-bold">Order #${p.order_id}</p><p class="text-sm text-slate-400"><i class="fas fa-user mr-1"></i>${p.customer_name}</p><p class="text-xs text-slate-500"><i class="fas fa-${p.metode==='QRIS'?'qrcode':'building-columns'} mr-1"></i>${p.metode}</p></div><div class="text-right"><p class="text-lg font-black accent">${rp(p.total)}</p><div class="flex gap-2 mt-2"><button onclick="konfirmasiBayar(${p.id})" class="btn-green text-xs"><i class="fas fa-check mr-1"></i>Konfirmasi Lunas</button><button onclick="hapusPayment(${p.id})" class="btn-red text-xs px-3"><i class="fas fa-trash"></i></button></div></div></div>`; }); html += '</div>'; }
+                html += '</div>';
+                html += `<div><h3 class="text-sm font-bold text-green-400 uppercase mb-3"><i class="fas fa-check-circle mr-1"></i>Sudah Lunas (${lunas.length})</h3>`;
+                if(lunas.length===0) html += '<div class="glass-light p-4 text-center text-slate-500 text-sm">Belum ada yang lunas</div>';
+                else { html += '<div class="space-y-2">'; lunas.forEach(p => { html += `<div class="glass-light p-3 flex flex-wrap justify-between items-center gap-3 opacity-70"><div><p class="font-bold text-sm">Order #${p.order_id} <span class="badge badge-green ml-2">Lunas</span></p><p class="text-xs text-slate-400">${p.customer_name} — ${p.tanggal_bayar||'-'}</p></div><p class="font-black accent">${rp(p.total)}</p></div>`; }); html += '</div>'; }
+                html += '</div>';
+            }
+            document.getElementById('contentArea').innerHTML = html;
+        } catch(e) { document.getElementById('contentArea').innerHTML = `<p class="text-red-400 text-center">${e.message}</p>`; }
+    }
+    async function konfirmasiBayar(payId) { if(!confirm('Konfirmasi pembayaran ini sebagai LUNAS?')) return; try { await authFetch(`${API}/payments/${payId}/konfirmasi`,{method:'PUT'}); toast('Pembayaran dikonfirmasi Lunas'); loadPayments(); loadOrders(); loadStats(); } catch(e) { toast(e.message,'error'); } }
+    async function hapusPayment(payId) { if(!confirm('Hapus data pembayaran ini?')) return; try { await authFetch(`${API}/payments/${payId}`,{method:'DELETE'}); toast('Data pembayaran dihapus'); loadPayments(); loadStats(); } catch(e) { toast(e.message,'error'); } }
+
+    </script>
+</body>
+</html>
