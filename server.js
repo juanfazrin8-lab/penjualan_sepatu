@@ -1,10 +1,7 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,16 +11,8 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static('public'));
-// Taruh setelah app.use(express.static('public'));
-app.get('/', (req, res) => {
-    if (db) {
-        res.send('Server Penjualan Sepatu Berjalan! Database Terhubung. Akses /api/ping untuk cek status.');
-    } else {
-        res.send('Server Berjalan, tapi database belum terhubung. Akses /api/ping untuk inisialisasi.');
-    }
-});
 
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+const uri = process.env.MONGODB_URI;
 const dbName = process.env.DB_NAME || 'Penjualan_Sepatu';
 let db, client;
 let nextIds = { customers: 1, products: 1, orders: 1, payments: 1, stok_masuk: 1 };
@@ -36,13 +25,18 @@ const BANK_INFO = {
 };
 
 // ==========================================
-//  KONEKSI DB (LAZY CONNECTION UNTUK VERCEL)
+//  KONEKSI DB 
 // ==========================================
 async function connectDB() {
     if (db) return true;
 
-    console.log('🔄 Menghubungkan ke MongoDB...');
+    console.log('Menghubungkan ke MongoDB...');
     try {
+        if (!uri) {
+            console.error('ERROR: MONGODB_URI tidak ditemukan di Environment Variables!');
+            return false;
+        }
+
         client = new MongoClient(uri, {
             serverSelectionTimeoutMS: 10000,
             connectTimeoutMS: 10000
@@ -51,7 +45,7 @@ async function connectDB() {
         db = client.db(dbName);
 
         await db.command({ ping: 1 });
-        console.log('✅ Terhubung ke MongoDB — Database:', dbName);
+        console.log('Terhubung ke MongoDB — Database:', dbName);
 
         // Inisialisasi nextIds dari data yang sudah ada
         for (const col of ['customers', 'products', 'orders', 'payments', 'stok_masuk']) {
@@ -76,13 +70,21 @@ async function connectDB() {
 
         return true;
     } catch (err) {
-        console.error('❌ GAGAL KONEKSI MONGODB:', err.message);
+        console.error('GAGAL KONEKSI MONGODB:', err.message);
         db = null;
         return false;
     }
 }
 
-// ========== PING ==========
+// ========== ROUTES ==========
+app.get('/', (req, res) => {
+    if (db) {
+        res.send('Server Penjualan Sepatu Berjalan! Database Terhubung.');
+    } else {
+        res.send('Server Berjalan, tapi database belum terhubung. Akses /api/ping untuk inisialisasi.');
+    }
+});
+
 app.get('/api/ping', async (req, res) => {
     const connected = await connectDB();
     res.json({
@@ -92,7 +94,6 @@ app.get('/api/ping', async (req, res) => {
     });
 });
 
-// ========== INFO BANK ==========
 app.get('/api/bank-info', (req, res) => {
     res.json(BANK_INFO);
 });
@@ -113,7 +114,6 @@ const authorizeAdmin = (req, res, next) => {
     next();
 };
 
-// Cek DB siap atau tidak (Dipakai di semua endpoint)
 const requireDB = async (req, res, next) => {
     if (!db) {
         const connected = await connectDB();
@@ -272,7 +272,6 @@ app.delete('/api/stok-masuk/:id', authenticateToken, authorizeAdmin, requireDB, 
     try { const r = await db.collection('stok_masuk').deleteOne({ id: parseInt(req.params.id) }); if (r.deletedCount === 0) return res.status(404).json({ error: 'Riwayat tidak ditemukan' }); res.json({ message: 'Riwayat dihapus' }); } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ========== KURANG STOK ==========
 app.post('/api/stok-kurang', authenticateToken, authorizeAdmin, requireDB, async (req, res) => {
     try {
         const { product_id, jumlah, keterangan } = req.body;
@@ -450,6 +449,12 @@ app.get('/api/stats', authenticateToken, requireDB, async (req, res) => {
 });
 
 // ==========================================
-//  EXPORT APP UNTUK VERCEL SERVERLESS
+//  JALANKAN SERVER (WAJIB ADA UNTUK VERCEL)
 // ==========================================
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server berjalan di port ${PORT}`);
+    });
+}
+
 module.exports = app;
