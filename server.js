@@ -69,10 +69,10 @@ async function connectDB() {
         }
 
         return true;
-    } catch (err) {
+        } catch (err) {
         console.error('GAGAL KONEKSI MONGODB:', err.message);
         db = null;
-        return false;
+        throw err; // <-- UBAH YANG INI
     }
 }
 
@@ -86,12 +86,20 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/ping', async (req, res) => {
-    const connected = await connectDB();
-    res.json({
-        status: connected ? 'OK' : 'NO_DB',
-        db: connected ? dbName : 'null',
-        time: new Date().toISOString()
-    });
+    try {
+        if (!uri) return res.json({ error: 'MONGODB_URI KOSONG DI VERCEL!' });
+        const connected = await connectDB();
+        res.json({
+            status: connected ? 'OK' : 'NO_DB',
+            db: connected ? dbName : 'null',
+            time: new Date().toISOString()
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            error: err.message, 
+            uri_preview: uri ? uri.substring(0, 40) + '...' : 'TIDAK ADA' 
+        });
+    }
 });
 
 app.get('/api/bank-info', (req, res) => {
