@@ -14,6 +14,14 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static('public'));
+// Taruh setelah app.use(express.static('public'));
+app.get('/', (req, res) => {
+    if (db) {
+        res.send('Server Penjualan Sepatu Berjalan! Database Terhubung. Akses /api/ping untuk cek status.');
+    } else {
+        res.send('Server Berjalan, tapi database belum terhubung. Akses /api/ping untuk inisialisasi.');
+    }
+});
 
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const dbName = process.env.DB_NAME || 'Penjualan_Sepatu';
