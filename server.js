@@ -57,9 +57,6 @@ async function connectDB() {
     }
 }
 
-// app.get('/', (req, res) => {
-//     res.send(db ? 'Server Berjalan! DB Terhubung.' : 'Server Berjalan, DB belum terhubung.');
-// });
 
 app.get('/api/ping', async (req, res) => {
     try {
