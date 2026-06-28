@@ -10,7 +10,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'rahasia_super_aman_sepatu_2024';
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.static('public'));
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../public')));
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.DB_NAME || 'Penjualan_Sepatu';

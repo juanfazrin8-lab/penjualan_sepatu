@@ -2,10 +2,10 @@
   "name": "penjualan-sepatu",
   "version": "1.0.0",
   "description": "Aplikasi Penjualan Sepatu dengan MongoDB + Node.js",
-  "main": "server.js",
+  "main": "api/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node api/server.js",
+    "dev": "nodemon api/server.js"
   },
   "dependencies": {
     "body-parser": "^1.20.4",
