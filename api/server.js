@@ -5,6 +5,8 @@ app.get('/api/test', (req, res) => {
     });
 });
 
+
+
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
@@ -237,4 +239,12 @@ app.get('/api/stats', authenticateToken, requireDB, async (req, res) => {
 });
 
 if (require.main === module) { app.listen(PORT, () => console.log(`Server jalan di port ${PORT}`)); }
+app.get('/api/test', (req, res) => {
+    res.json({
+        ok: true,
+        mongo: !!process.env.MONGODB_URI,
+        jwt: !!process.env.JWT_SECRET,
+        db: process.env.DB_NAME || null
+    });
+});
 module.exports = app;
