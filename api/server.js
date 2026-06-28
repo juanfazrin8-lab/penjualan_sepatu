@@ -78,6 +78,9 @@ const authenticateToken = (req, res, next) => {
 const authorizeAdmin = (req, res, next) => { if (req.user.role !== 'admin') return res.status(403).json({ error: 'Hanya Admin' }); next(); };
 const requireDB = async (req, res, next) => { if (!db) { if (!(await connectDB())) return res.status(503).json({ error: 'DB belum terhubung' }); } next(); };
 
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/../public/index.html');
+});
 // ========== AUTH ==========
 app.post('/api/login', requireDB, async (req, res) => {
     try {
