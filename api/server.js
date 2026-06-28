@@ -1,3 +1,10 @@
+app.get('/api/test', (req, res) => {
+    res.json({
+        status: 'ok',
+        message: 'server hidup'
+    });
+});
+
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
